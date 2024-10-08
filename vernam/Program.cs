@@ -3,6 +3,7 @@ using System.Text;
 using System.IO;
 using System.Runtime.Remoting.Contexts;
 using System.Xml.Schema;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace vernam
 {
@@ -16,6 +17,7 @@ namespace vernam
                 return;
             }
             string option = args[0];
+            string path = args[2];
             string key = File.ReadAllText(args[2]).Trim();
             switch (option)
             {
@@ -23,19 +25,14 @@ namespace vernam
                 case ("--encrypt"):
                     (string, int) ck = Encrypt(args[1], key);
                     Console.WriteLine("-----START OF ENCRYPTED MESSAGE-----\n" + ck.Item1 + "\n-----END OF ENCRYPTED MESSAGE-----");
-                    using (StreamWriter writer = new StreamWriter(key))
-                    {
-                        writer.WriteLine();// delete used key
-                    }
+                    File.WriteAllText(path, key.Remove(0, ck.Item2));
                     break;
                 case ("-d"):
                 case ("--decrypt"):
                     (string, int) pk = Decrypt(args[1], key);
                     Console.WriteLine("-----START OF DECRYPTED MESSAGE-----\n" + pk.Item1 + "\n-----END OF DECRYPTED MESSAGE-----");
-                    using (StreamWriter writer = new StreamWriter(key))
-                    {
-                        writer.WriteLine();//delete used key
-                    }
+                    File.WriteAllText(path, key.Remove(0, pk.Item2));
+
                     break;
             }
         }
