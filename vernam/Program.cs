@@ -9,6 +9,7 @@ namespace vernam
 {
     internal class Program
     {
+        public static string currentDir = Environment.CurrentDirectory;
         static void Main(string[] args)
         {
             if (args.Length != 3)
@@ -32,8 +33,22 @@ namespace vernam
                     (string, int) pk = Decrypt(args[1], key);
                     Console.WriteLine("-----START OF DECRYPTED MESSAGE-----\n" + pk.Item1 + "\n-----END OF DECRYPTED MESSAGE-----");
                     File.WriteAllText(path, key.Remove(0, pk.Item2));
-
                     break;
+                case ("-g"):
+                case ("--generate-keys"):
+                    if (File.Exists(currentDir + "\\e.txt") && File.Exists(currentDir + "\\d.txt"))
+                    {
+                        Console.WriteLine("the keys have been already generated.");
+                        return;
+                    }
+                    using (StreamWriter writer = new StreamWriter(currentDir + "\\e.txt"))
+                    {
+                        Random r = new Random();
+                        for (int i = 0; i < 1000000; i++) writer.Write((char) r.Next(97, 123););
+                    }
+                    File.Copy(currentDir + "\\e.txt", currentDir + "\\d.txt", true);
+                    break;
+
             }
         }
         private static (string, int) Encrypt(string p, string k)
